@@ -1,0 +1,14 @@
+version: 2.1
+orbs:
+  node: circleci/node@5
+jobs:
+  cci-agent-setup:
+    executor: node/default
+    environment:
+      JEST_JUNIT_OUTPUT_DIR: ./test-results/
+    steps:
+      - checkout
+workflows:
+  cci-agent-setup:
+    jobs:
+      - cci-agent-setup
