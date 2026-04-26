@@ -23,7 +23,7 @@ describe('Flaky Timing-Based Tests', () => {
     const button = document.getElementById('load-data-btn');
     const display = document.getElementById('data-display');
     const spinner = document.querySelector('.spinner');
-    
+
     // Mock async data loading with random delay
     const mockLoadData = () => {
       return new Promise((resolve) => {
@@ -38,17 +38,13 @@ describe('Flaky Timing-Based Tests', () => {
     };
 
     spinner.style.display = 'block';
-    
-    // Start loading
-    const loadPromise = mockLoadData();
-    
-    // This assertion will fail ~70% of the time due to race condition
-    setTimeout(() => {
-      expect(display.textContent).toBe('Data loaded!');
-      expect(spinner.style.display).toBe('none');
-    }, 120); // Fixed 120ms - will often run before the 80-200ms delay completes
-    
-    await loadPromise;
+
+    // Start loading and wait for it to fully complete before asserting
+    await mockLoadData();
+
+    // Assert after the promise resolves - no race condition
+    expect(display.textContent).toBe('Data loaded!');
+    expect(spinner.style.display).toBe('none');
   });
 
   // FLAKY TEST 2: Animation timing dependency
